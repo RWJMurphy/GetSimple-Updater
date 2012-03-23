@@ -2,7 +2,7 @@
 define('UPDATER_SHORTNAME', 'updater');
 define('UPDATER_NAME', i18n_r(UPDATER_SHORTNAME.'/PLUGIN_NAME'));
 define('UPDATER_DESCRIPTION', i18n_r(UPDATER_SHORTNAME.'/PLUGIN_DESCRIPTION'));
-define('UPDATER_VERSION', '0.0.1');
+define('UPDATER_VERSION', '1.0.0');
 define('UPDATER_AUTHOR', 'Reed Murphy');
 define('UPDATER_URL', 'http://www.reedmurphy.net/');
 define('UPDATER_TABNAME', 'plugins');
