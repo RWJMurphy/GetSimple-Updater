@@ -9,5 +9,5 @@ Features
 
 Installation
 ------------
-1. Extract the zip file intto your website's `plugins/` directoroy
+1. Extract the zip file into your website's `plugins/` directory
 2. In the Plugins page in your admin panel, there will be a new menu entry: Updater
