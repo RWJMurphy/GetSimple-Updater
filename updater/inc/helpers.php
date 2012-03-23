@@ -136,8 +136,10 @@ if (!function_exists("rrmdir")) {
 }
 
 if (!function_exists("rcopy")) {
-    function rcopy($source, $dest, $mode=0775){
+    function rcopy($source, $dest, $mode=0775, $ignore=Null){
         $success = true;
+        if ($ignore != Null && in_array($source, $ignore))
+            continue;
         if (is_file($source)) {
             $c = copy($source, $dest);
             chmod($dest, $mode);

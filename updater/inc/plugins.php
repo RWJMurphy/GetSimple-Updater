@@ -59,7 +59,7 @@ function updater_download_plugin($plugin_data) {
     );
     curl_setopt_array($ch, $curl_options);
     if (!curl_exec($ch)) {
-        updater_set_error(i18n_r(UPDATER_SHORTNAME.'/ERROR_DOWNLOAD_PLUGIN'), $plugin_data['name']);
+        updater_set_error(i18n_r(UPDATER_SHORTNAME.'/ERROR_DOWNLOAD_PLUGIN_CURL'), array($plugin_data['name'], curl_errno($ch), curl_error($ch)));
         return false;
     }
     return $destination;

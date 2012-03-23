@@ -17,14 +17,14 @@ $status = updater_get_status();
 if ($status['getsimple']['ok'] === True) {
     $message_class = "OKmsg";
     $message = i18n_r('LATEST_VERSION');
-    $update_text = i18n_r('REINSTALL');
+    $update_text = i18n_r(UPDATER_SHORTNAME.'/REINSTALL_GETSIMPLE');
 } elseif ($status['getsimple']['ok'] === False) {
     $message_class = "ERRmsg";
-    $message = i18n_r('UPG_NEEDED') . $status['getsimple']['latest'];
-    $update_text = i18n_r('UPDATE');
+    $message = i18n_r('UPG_NEEDED') . " " . $status['getsimple']['latest'];
+    $update_text = sprintf(i18n_r(UPDATER_SHORTNAME.'/UPDATE_GETSIMPLE'), $status['getsimple']['latest']);
 } else {
     $message_class = "WARNmsg";
-    $message = i18n_r('CANNOT_CHECK') . $status['getsimple']['installed'];
+    $message = i18n_r('CANNOT_CHECK') . " " . $status['getsimple']['installed'];
     $update_text = Null;
 }
 ?>
