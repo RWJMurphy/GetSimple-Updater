@@ -1,5 +1,43 @@
 <?php
 $thisfile=basename(__FILE__, ".php");
+if(!function_exists('i18n_merge')) { // Backport from GS 3.1 for GS 2.0 support
+    function i18n_merge($plugin, $language=null) {
+        global $i18n, $LANG;
+        return i18n_merge_impl($plugin, $language ? $language : $LANG, $i18n);
+    }
+    function i18n_merge_impl($plugin, $lang, &$globali18n) {
+        $i18n = array();
+        if (!file_exists(GSPLUGINPATH.$plugin.'/lang/'.$lang.'.php')) {
+            return false;
+        }
+        @include(GSPLUGINPATH.$plugin.'/lang/'.$lang.'.php');
+        if (count($i18n) > 0) foreach ($i18n as $code => $text) {
+            if (!array_key_exists($plugin.'/'.$code, $globali18n)) {
+                $globali18n[$plugin.'/'.$code] = $text;
+            }
+        }
+        return true;
+    }
+    function i18n($name, $echo=true) {
+        global $i18n;
+        global $LANG;
+
+        if (array_key_exists($name, $i18n)) {
+            $myVar = $i18n[$name];
+        } else {
+            $myVar = '{'.$name.'}';
+        }
+
+        if (!$echo) {
+            return $myVar;
+        } else {
+            echo $myVar;
+        }
+    }
+    function i18n_r($name) {
+        return i18n($name, false);
+    }
+}
 i18n_merge($thisfile) || i18n_merge($thisfile, 'en_US');
 require_once $thisfile . "/inc/include.php";
 $updater_config = updater_config();

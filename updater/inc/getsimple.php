@@ -50,6 +50,7 @@ function updater_download_getsimple() {
 
 function updater_install_getsimple_zip($zipfile) {
     $success = true;
+    $config = updater_config();
     if (!file_exists($zipfile)) {
         return false;
     }
@@ -73,7 +74,7 @@ function updater_install_getsimple_zip($zipfile) {
         return false;
     }
 
-    $ignore = array("theme", "backups", "data", "robots.txt", "temp.gsconfig.php", "temp.htaccess");
+    $ignore = $config['getsimple_ignore'];
     $success &= rcopy($gs_folder, GSROOTPATH, 0775, $ignore);
 
     if (!$success) {
@@ -85,19 +86,8 @@ function updater_install_getsimple_zip($zipfile) {
 }
 
 function updater_sanity_check_getsimple($folder) {
-    $known_getsimple_contents = array(
-        "admin" => array("is_dir" => true),
-        "backups" => array("is_dir" => true),
-        "data" => array("is_dir" => true),
-        "index.php" => array("is_dir" => false),
-        "LICENSE.txt" => array("is_dir" => false),
-        "plugins" => array("is_dir" => true),
-        "readme.txt" => array("is_dir" => false),
-        "robots.txt" => array("is_dir" => false),
-        "temp.gsconfig.php" => array("is_dir" => false),
-        "temp.htaccess" => array("is_dir" => false),
-        "theme" => array("is_dir" => true),
-    );
+    $config = updater_config();
+    $known_getsimple_contents = $config['getsimple_known'];
 
     $contents = scandir($folder);
     $sane = count($contents) == 3;

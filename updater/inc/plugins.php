@@ -66,6 +66,8 @@ function updater_download_plugin($plugin_data) {
 }
 
 function updater_install_plugin_zip($zipfile, $plugin_name) {
+    $config = updater_config();
+    $ignorables = $config['plugin_ignorable'];
     $success = true;
     if (!file_exists($zipfile)) {
         return false;
@@ -92,7 +94,7 @@ function updater_install_plugin_zip($zipfile, $plugin_name) {
 
     $success &= copy($tempfolder . $plugin_name . ".php", GSPLUGINPATH . $plugin_name . ".php");
     if (file_exists($tempfolder . $plugin_name) and is_dir($tempfolder . $plugin_name)) {
-        $success &= rcopy($tempfolder . $plugin_name, GSPLUGINPATH . $plugin_name);
+        $success &= rcopy($tempfolder . $plugin_name, GSPLUGINPATH . $plugin_name, 0775, $ignorables);
     }
 
     if (!$success) {
@@ -104,18 +106,25 @@ function updater_install_plugin_zip($zipfile, $plugin_name) {
 }
 
 function updater_sanity_check_plugin($folder, $plugin_name) {
+    $config = updater_config();
+    $ignorables = $config['plugin_ignorable'];
     $sane = file_exists($folder . $plugin_name . ".php");
     foreach(scandir($folder) as $filename) {
         if ($filename == "." || $filename == "..") {
             continue;
         }
+        if (in_array(basename($filename), $ignorables)) {
+            continue;
+        }
         $full_filename = $folder . $filename;
         if (is_dir($full_filename)) {
             if ($filename !== $plugin_name) {
+                updater_set_error(i18n_r(UPDATER_SHORTNAME.'/ERROR_PLUGIN_MALFORMED_DIRECTORY'), $filename);
                 $sane = false;
             }
         } else {
             if (strtolower($filename) !== strtolower($plugin_name . ".php")) {
+                updater_set_error(i18n_r(UPDATER_SHORTNAME.'/ERROR_PLUGIN_MALFORMED_FILE'), $filename);
                 $sane = false;
             }
         }

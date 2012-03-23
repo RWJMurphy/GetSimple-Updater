@@ -159,3 +159,27 @@ if (!function_exists("rcopy")) {
         return $success;
     }
 }
+
+if (!function_exists('redirect')) {
+    function redirect($url) {
+        global $i18n;
+
+        if (!headers_sent($filename, $linenum)) {
+            header('Location: '.$url);
+        } else {
+            echo "<html><head><title>".i18n_r('REDIRECT')."</title></head><body>";
+            if ( !defined('GSDEBUG') || (GSDEBUG != TRUE) ) {
+                echo '<script type="text/javascript">';
+                echo 'window.location.href="'.$url.'";';
+                echo '</script>';
+                echo '<noscript>';
+                echo '<meta http-equiv="refresh" content="0;url='.$url.'" />';
+                echo '</noscript>';
+            }
+            echo i18n_r('ERROR').": Headers already sent in ".$filename." on line ".$linenum."\n";
+            printf(i18n_r('REDIRECT_MSG'), $url);
+            echo "</body></html>";
+        }
+        exit;
+    }
+}
