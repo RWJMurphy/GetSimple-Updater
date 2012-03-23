@@ -7,6 +7,7 @@ $updater_config = array(
         "update_plugin",
         "uninstall_plugin",
         "revert_plugin",
+        "install_plugin",
     ),
     "submenu_actions" => array(),
     "default_action" => "status",
@@ -17,7 +18,12 @@ $updater_config = array(
         "config" => array(),
     ),
     "plugin_ignorable" => array(
-        "__MACOSX",
+        "*" => array(
+            "__MACOSX",
+        ),
+        "social_share_tfg.php" => array(
+            "readme.txt",
+        ),
     ),
     "getsimple_ignore" => array(
         "theme", "backups", "data", "robots.txt", "temp.gsconfig.php", "temp.htaccess",

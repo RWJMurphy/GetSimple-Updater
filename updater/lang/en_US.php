@@ -31,6 +31,7 @@ $i18n = array(
     'ERROR_GETSIMPLE_UNKNOWN_FILE' => "Unknown file '%s'.",
     'ERROR_GETSIMPLE_MISSING_FILES' => "Missing files: %s.",
 
+    'SUCCESS_INSTALL_PLUGIN' => "Plugin installed successfully.",
     'SUCCESS_UNINSTALL_PLUGIN' => "Plugin uninstalled successfully.",
     'SUCCESS_UPDATE_PLUGIN' => "Plugin updated successfully.",
     'SUCCESS_UPDATE_ALL_PLUGINS' => "All plugins updated to their latest versions.",
@@ -45,4 +46,5 @@ $i18n = array(
     'REINSTALL_PLUGIN' => "Reinstall %s",
     'UNINSTALL_PLUGIN' => "Uninstall %s",
     'LATEST' => "Latest",
+    'INSTALL' => "Install",
 );

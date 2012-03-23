@@ -31,13 +31,35 @@ function updater_update_plugin($plugin_filename, $force=false) {
     if ($updated_plugin_file === false) {
         return false;
     }
-
-    if (!updater_install_plugin_zip($updated_plugin_file, $basename)) {
+    
+    $ignore = updater_get_plugin_ignored_files($plugin_filename); 
+    if (!updater_install_plugin_zip($updated_plugin_file, $basename, $ignore)) {
         @unlink($updated_plugin_file);
         return false;
     }
 
     @unlink($updated_plugin_file);
+    return true;
+}
+
+function updater_install_new_plugin($plugin_filename) {
+    $plugin = updater_get_plugin_status($plugin_filename);
+    $fileext = pathinfo($plugin_filename, PATHINFO_EXTENSION);
+    $basename = basename($plugin_filename, ".$fileext");
+    $plugin_file = updater_download_plugin($plugin);
+    
+    $plugin_file = updater_download_plugin($plugin);
+    if ($plugin_file === false) {
+        return false;
+    }
+
+    $ignore = updater_get_plugin_ignored_files($plugin_filename); 
+    if (!updater_install_plugin_zip($plugin_file, $basename, $ignore)) {
+        @unlink($plugin_file);
+        return false;
+    }
+
+    @unlink($plugin_file);
     return true;
 }
 
@@ -65,9 +87,8 @@ function updater_download_plugin($plugin_data) {
     return $destination;
 }
 
-function updater_install_plugin_zip($zipfile, $plugin_name) {
+function updater_install_plugin_zip($zipfile, $plugin_name, $ignore=Null) {
     $config = updater_config();
-    $ignorables = $config['plugin_ignorable'];
     $success = true;
     if (!file_exists($zipfile)) {
         return false;
@@ -86,7 +107,7 @@ function updater_install_plugin_zip($zipfile, $plugin_name) {
         return false;
     }
 
-    if (!updater_sanity_check_plugin($tempfolder, $plugin_name)) {
+    if (!updater_sanity_check_plugin($tempfolder, $plugin_name, $ignore)) {
         updater_set_error(i18n_r(UPDATER_SHORTNAME.'/ERROR_PLUGIN_MALFORMED'), $plugin_name);
         rrmdir($tempfolder);
         return false;
@@ -94,7 +115,7 @@ function updater_install_plugin_zip($zipfile, $plugin_name) {
 
     $success &= copy($tempfolder . $plugin_name . ".php", GSPLUGINPATH . $plugin_name . ".php");
     if (file_exists($tempfolder . $plugin_name) and is_dir($tempfolder . $plugin_name)) {
-        $success &= rcopy($tempfolder . $plugin_name, GSPLUGINPATH . $plugin_name, 0775, $ignorables);
+        $success &= rcopy($tempfolder . $plugin_name, GSPLUGINPATH . $plugin_name, 0775, $ignore);
     }
 
     if (!$success) {
@@ -105,15 +126,14 @@ function updater_install_plugin_zip($zipfile, $plugin_name) {
     return $success;
 }
 
-function updater_sanity_check_plugin($folder, $plugin_name) {
+function updater_sanity_check_plugin($folder, $plugin_name, $ignore) {
     $config = updater_config();
-    $ignorables = $config['plugin_ignorable'];
     $sane = file_exists($folder . $plugin_name . ".php");
     foreach(scandir($folder) as $filename) {
         if ($filename == "." || $filename == "..") {
             continue;
         }
-        if (in_array(basename($filename), $ignorables)) {
+        if (in_array(basename($filename), $ignore)) {
             continue;
         }
         $full_filename = $folder . $filename;
@@ -213,4 +233,13 @@ function updater_get_plugin_info($plugin_filename) {
     $basename = basename($plugin_filename, ".$fileext");
 
     return $plugin_info[$basename];
+}
+
+function updater_get_plugin_ignored_files($plugin_filename) {
+    $config = updater_config();
+    $ignore = $config['plugin_ignorable']['*'];
+    if (array_key_exists($plugin_filename, $config['plugin_ignorable'])) {
+        $ignore = array_merge($ignore, $config['plugin_ignorable'][$plugin_filename]);
+    }
+    return $ignore;
 }

@@ -39,9 +39,14 @@ function updater_get_plugin_status($plugin_file) {
     $basename = basename($plugin_file, ".$fileext");
 
     $status = array(
-        'name' => $plugin_info[$basename]['name'],
-        'installed' => $plugin_info[$basename]['version'],
+        'name' => $plugin_file,
+        'installed' => Null,
     );
+
+    if (array_key_exists($basename, $plugin_info)) {
+        $status['name'] = $plugin_info[$basename]['name'];
+        $status['installed'] = $plugin_info[$basename]['version'];
+    }
 
     if (file_exists(UPDATER_PLUGIN_BACKUP_PATH . $basename)) {
         $status['backup'] = file_get_contents(UPDATER_PLUGIN_BACKUP_PATH . $basename . "/__version__.txt");
