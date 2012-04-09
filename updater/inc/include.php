@@ -1,10 +1,12 @@
 <?php
-require_once dirname(__FILE__).'/defines.php';
-require_once dirname(__FILE__).'/config.php';
-require_once dirname(__FILE__).'/helpers.php';
+define('UPDATER_INCLUDEPATH', dirname(__FILE__));
 
-require_once dirname(__FILE__).'/admin.php';
-require_once dirname(__FILE__).'/api.php';
-require_once dirname(__FILE__).'/getsimple.php';
-require_once dirname(__FILE__).'/plugins.php';
-require_once dirname(__FILE__).'/status.php';
+require_once UPDATER_INCLUDEPATH.'/defines.php';
+require_once UPDATER_INCLUDEPATH.'/config.php';
+require_once UPDATER_INCLUDEPATH.'/helpers.php';
+
+require_once UPDATER_INCLUDEPATH.'/admin.php';
+require_once UPDATER_INCLUDEPATH.'/api.php';
+require_once UPDATER_INCLUDEPATH.'/getsimple.php';
+require_once UPDATER_INCLUDEPATH.'/plugins.php';
+require_once UPDATER_INCLUDEPATH.'/status.php';
